@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to fetch weather data from the API
     function getWeatherData() {
-        const apiUrl = `http://api.weatherapi.com/v1/current.json?key=cfa2f6024166493185081638252502&q=Budapest&aqi=yes`;
+        const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=cfa2f6024166493185081638252502&q=Budapest&aqi=yes&days=3`;
 
         fetch(apiUrl)
             .then(response => {
