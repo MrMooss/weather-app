@@ -36,11 +36,44 @@ html, body{
     border-radius: 10px;
 }
 
-.humidity, .wind{
+.humidity, .wind, .air-quality, .feels-like{
     font-size: 1.5em;
     background-color: rgba(206, 255, 255, 0.575);
     border-radius: 10px;
     align-items: center;
     align-content: center;
     justify-content: center;
+}
+
+.div4 {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: rgba(206, 255, 255, 0.575);
+    border-radius: 10px;
+}
+
+.tomorrow, .da-tomorrow {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.AQI-1 {
+    background-color: #53FF45e1;
+}
+.AQI-2 {
+    background-color: #77BA99e1
+}
+.AQI-3 {
+    background-color: #F4FF52e1;
+}
+.AQI-4 {
+    background-color: #e74444e1;
+}
+.AQI-5 {
+    background-color: #80141be1;
+}
+.AQI-6 {
+    background-color: #262730e1;
 }

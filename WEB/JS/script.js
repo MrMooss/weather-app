@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const apiKey = 'cfa2f6024166493185081638252502'; // Replace with your actual API key
-    const city = 'London'; // Replace with the city you want to query
+    const apiKey = 'cfa2f6024166493185081638252502';
+    const city = 'Budapest';
     const weatherContainer = document.querySelector('.weather-container');
-
-    // Function to fetch weather data from the API
+    
+    // Function to fetch weather data from the Weather API
     function getWeatherData() {
-        const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=cfa2f6024166493185081638252502&q=Budapest&aqi=yes&days=3`;
+        const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&aqi=yes&days=3`;
 
         fetch(apiUrl)
             .then(response => {
@@ -15,25 +15,145 @@ document.addEventListener("DOMContentLoaded", () => {
                 return response.json();
             })
             .then(data => {
-                // Extract data and update the DOM
+                const today = new Date().toISOString().split('T')[0];  // Get today's date in YYYY-MM-DD format
+                const currentHour = new Date().getHours(); // Get current hour
+                
+                const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                const forecastTomorrow = data.forecast.forecastday.find(day => day.date === tomorrow);
+
+                const dATomorrow = new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString().split('T')[0];
+                const forecastDATomorrow = data.forecast.forecastday.find(day => day.date === dATomorrow);
+
+                const forecastToday = data.forecast.forecastday.find(day => day.date === today);
+                const hourlyForecast = forecastToday.hour.filter(hour => hour.time.split(' ')[1].split(':')[0] >= currentHour);
+
+                // Format the weather info for prompt
+                const relevantWeatherInfo = hourlyForecast.map(hour => {
+                    return `At ${hour.time.split(' ')[1]}: Temp: ${hour.temp_c}°C but will feel like: ${hour.feelslike_c}°C, Condition: ${hour.condition.text}, Wind: ${hour.wind_kph} km/h, Gust ${hour.gust_kph}, Wind direction: ${hour.wind_dir}, Humidity: ${hour.humidity}%, Chance of rain: ${hour.chance_of_rain}%`;
+                }).join('\n');
+
+                // Display weather info on the page
                 const temperature = data.current.temp_c;
                 const weatherDescription = data.current.condition.text;
                 const cityName = data.location.name;
-
-                // Create and insert HTML
                 weatherContainer.innerHTML = `
-                    <div class="weather-info div1"><div class="city-name"><h2>${cityName}</h2></div>
-                    <p>Temperature: ${temperature}°C</p>
-                    <p>Condition: ${weatherDescription}</p></div>
+                    <div class="weather-info div1">
+                        <div class="city-name"><h2>${cityName}</h2></div>
+                        <p>Temperature: ${temperature}°C</p>
+                        <p>Condition: ${weatherDescription}</p>
+                    </div>
                     <div class="wind div2"><p>Wind: ${data.current.wind_kph} km/h</p></div>
                     <div class="humidity div3"><p>Humidity: ${data.current.humidity}%</p></div>
+                    <div class="forecast div4">
+                        <div class="tomorrow"><div class="city-name"><h2>${cityName}</h2></div>
+                                                <p>Temperature: ${forecastTomorrow.day.avgtemp_c}°C</p>
+                                                <p>Condition: ${forecastTomorrow.day.condition.text}</p></div>
+                        <div class="da-tomorrow"><div class="city-name"><h2>${cityName}</h2></div>
+                                                <p>Temperature: ${forecastDATomorrow.day.avgtemp_c}°C</p>
+                                                <p>Condition: ${forecastDATomorrow.day.condition.text}</p></div>
+                    </div>
+                    <div class="feels-like div5"<p>Feels like: ${data.current.feelslike_c}°C</p></div>
+                    <div class="air-quality AQI-${data.current.air_quality["us-epa-index"]} div6"><p>AQI: ${data.current.air_quality["us-epa-index"]}</p></div>
                 `;
+                console.log(relevantWeatherInfo)
+                // Call the OpenRouter API after getting relevant weather info
+                getOpenRouterData(relevantWeatherInfo);
             })
             .catch(error => {
                 weatherContainer.innerHTML = `<p>Error fetching weather data: ${error.message}</p>`;
             });
     }
 
-    // Call the function to fetch and display weather data
+    // Function to fetch data from OpenRouter API with the relevant weather info
+    function getOpenRouterData(relevantWeatherInfo) {
+        const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
+        const openRouterApiKey = "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";
+
+        fetch(openRouterApiUrl, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${openRouterApiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "model": "google/gemini-2.0-pro-exp-02-05:free",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                            "type": "text", 
+                            "text": `Here is the weather forecast for Budapest from the current time onward:\n${relevantWeatherInfo}\n\nCan you tell me, in 3 or 4 sentences, what should i wear for going outside?`
+                            }
+                        ]
+                    }
+                ]
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch OpenRouter data");
+            }
+            return response.json();
+        })
+        .then(openRouterData => {
+            // Extract the response content
+            const openRouterMessage = openRouterData.choices[0].message.content;
+            getSearchPrompt(openRouterMessage);
+            // Append the OpenRouter data to the existing weatherContainer
+            const openRouterHTML = `
+                <div class="openrouter-info div7">
+                    <p>${openRouterMessage}</p>
+                </div>
+            `;
+            weatherContainer.insertAdjacentHTML('beforeend', openRouterHTML); // Append OpenRouter data at the end
+        })
+        .catch(error => {
+            weatherContainer.insertAdjacentHTML('beforeend', `<p>Error fetching OpenRouter data: ${error.message}</p>`);
+        });
+    }
+
+    function getSearchPrompt(openRouterMessage) {
+        const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
+        const openRouterApiKey = "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";
+
+        fetch(openRouterApiUrl, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${openRouterApiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "model": "google/gemini-2.0-pro-exp-02-05:free",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                            "type": "text", 
+                            "text": `Generate me 4 search prompts that i can use in google to look up outfits for the following text: ${openRouterMessage}`
+                            }
+                        ]
+                    }
+                ]
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch OpenRouter data");
+            }
+            return response.json();
+        })
+        .then(openRouterData => {
+            // Extract the response content
+            const openRouterMessage = openRouterData.choices[0].message.content;
+            console.log(openRouterMessage)
+        })
+        .catch(error => {
+            weatherContainer.insertAdjacentHTML('beforeend', `<p>Error fetching OpenRouter data: ${error.message}</p>`);
+        });
+    }
+
     getWeatherData();
+
 });
