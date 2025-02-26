@@ -45,14 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="wind div2"><p>Wind: ${data.current.wind_kph} km/h</p></div>
                     <div class="humidity div3"><p>Humidity: ${data.current.humidity}%</p></div>
                     <div class="forecast div4">
-                        <div class="tomorrow"><div class="city-name"><h2>${cityName}</h2></div>
+                        <div class="tomorrow"><div class="city-name"><h2>${tomorrow.replace(/-/g, '.')}</h2></div>
                                                 <p>Temperature: ${forecastTomorrow.day.avgtemp_c}°C</p>
                                                 <p>Condition: ${forecastTomorrow.day.condition.text}</p></div>
-                        <div class="da-tomorrow"><div class="city-name"><h2>${cityName}</h2></div>
+                        <div class="da-tomorrow"><div class="city-name"><h2>${dATomorrow.replace(/-/g, '.')}</h2></div>
                                                 <p>Temperature: ${forecastDATomorrow.day.avgtemp_c}°C</p>
                                                 <p>Condition: ${forecastDATomorrow.day.condition.text}</p></div>
                     </div>
-                    <div class="feels-like div5"<p>Feels like: ${data.current.feelslike_c}°C</p></div>
+                    <div class="feels-like div5"><p>Feels like: ${data.current.feelslike_c}°C</p></div>
                     <div class="air-quality AQI-${data.current.air_quality["us-epa-index"]} div6"><p>AQI: ${data.current.air_quality["us-epa-index"]}</p></div>
                 `;
                 console.log(relevantWeatherInfo)
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch data from OpenRouter API with the relevant weather info
     function getOpenRouterData(relevantWeatherInfo) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
+        const openRouterApiKey = "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";
 
         fetch(openRouterApiUrl, {
             method: "POST",
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getSearchPrompt(openRouterMessage) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
+        const openRouterApiKey = "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";
 
         fetch(openRouterApiUrl, {
             method: "POST",
