@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const apiKey = 'cfa2f6024166493185081638252502';
+    const apiKey = '';
     const city = 'Budapest';
     const weatherContainer = document.querySelector('.weather-container');
     const weatherBackground = document.querySelector('.weather-background');
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch data from OpenRouter API with the relevant weather info
     function getOpenRouterData(relevantWeatherInfo) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
+        const openRouterApiKey = "";
 
         fetch(openRouterApiUrl, {
             method: "POST",
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getSearchPrompt(openRouterMessage) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
+        const openRouterApiKey = "";
 
         fetch(openRouterApiUrl, {
             method: "POST",
@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         })
     }
-    const accessKey = 'fUBWm53jkeJdhvIKjbc55F-3JUDugNx_OLtbv9-kE1E';
+    const accessKey = '';
     async function getUnsplashImages(query) { 
         const response = await fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=2`, {
             headers: {
