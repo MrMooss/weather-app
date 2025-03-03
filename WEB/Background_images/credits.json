@@ -1,0 +1,386 @@
+[
+	{
+        "weather": "sunny_day",
+        "credit": "Photo by <a href='https://unsplash.com/@konrad_b?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Konrad Bączyk</a> on <a href='https://unsplash.com/photos/a-street-with-cars-parked-on-the-side-of-it-HWoslv623Fk?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "clear_night",
+        "credit": "Photo by <a href='https://unsplash.com/@reivan?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Ivan Ivanov</a> on <a href='https://unsplash.com/photos/a-sidewalk-with-street-lights-and-buildings-hlTOARAzF54?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "partly_cloudy_day",
+        "credit": "Photo by <a href='https://unsplash.com/@yuralytkin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Yura Lytkin</a> on <a href='https://unsplash.com/photos/a-city-street-lined-with-tall-buildings-and-a-clock-tower-RS13kvm1IUs?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "partly_cloudy_night",
+        "credit": "Photo by <a href='https://unsplash.com/@nicholastibi_ji?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Tibi Isaiah</a> on <a href='https://unsplash.com/photos/a-city-street-at-night-with-street-lights-ooawweNHRzM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "cloudy_day",
+        "credit": "Photo by <a href='https://unsplash.com/@goranab?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>goxy bgd</a> on <a href='https://unsplash.com/photos/green-grass-field-under-white-clouds-during-daytime-VkeuvuTOCdc?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "cloudy_night",
+        "credit": "Photo by <a href='https://unsplash.com/@johnelfes?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>john elfes</a> on <a href='https://unsplash.com/photos/city-skyline-during-night-time-JTMLmol75Aw?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "overcast_day",
+        "credit": "Photo by <a href='https://unsplash.com/@sxpistols?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>sxpistols sxpstls</a> on <a href='https://unsplash.com/photos/a-black-and-white-photo-of-a-city-I_fuuEs8uEc?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "overcast_night",
+        "credit": "Photo by <a href='https://unsplash.com/@davidkristianto?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>David Kristianto</a> on <a href='https://unsplash.com/photos/a-view-of-a-city-with-dark-clouds-in-the-background-jScEx_2YGGI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "mist_day",
+        "credit": "Photo by <a href='https://unsplash.com/@komarov?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Komarov Egor 🇺🇦</a> on <a href='https://unsplash.com/photos/a-foggy-street-with-a-few-people-walking-on-it-DlQRYmTcB0I?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "mist_night",
+        "credit": "Photo by <a href='https://unsplash.com/@endka_1?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Katsiaryna Endruszkiewicz</a> on <a href='https://unsplash.com/photos/a-foggy-street-with-palm-trees-and-street-lights-suiuilIckMI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "patchy_rain_day",
+        "credit": "Photo by <a href='https://unsplash.com/@dorisborch?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Doris F. Borch</a> on <a href='https://unsplash.com/photos/people-walking-on-pedestrian-lane-during-daytime-2Q-7xVqfJFI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "patchy_rain_night",
+        "credit": "Photo by <a href='https://unsplash.com/@dozy_de?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Christian Ladewig</a> on <a href='https://unsplash.com/photos/water-droplets-on-glass-window-during-night-time-ckyhWjWa3kU?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
+    },
+    {
+        "weather": "patchy_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_sleet_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_sleet_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_freezing_drizzle_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_freezing_drizzle_night",
+        "credit": ""
+    },
+    {
+        "weather": "thundery_outbreaks_day",
+        "credit": ""
+    },
+    {
+        "weather": "thundery_outbreaks_night",
+        "credit": ""
+    },
+    {
+        "weather": "blowing_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "blowing_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "blizzard_day",
+        "credit": ""
+    },
+    {
+        "weather": "blizzard_night",
+        "credit": ""
+    },
+    {
+        "weather": "fog_day",
+        "credit": ""
+    },
+    {
+        "weather": "fog_night",
+        "credit": ""
+    },
+    {
+        "weather": "freezing_fog_day",
+        "credit": ""
+    },
+    {
+        "weather": "freezing_fog_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_drizzle_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_drizzle_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_drizzle_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_drizzle_night",
+        "credit": ""
+    },
+    {
+        "weather": "freezing_drizzle_day",
+        "credit": ""
+    },
+    {
+        "weather": "freezing_drizzle_night",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_freezing_drizzle_day",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_freezing_drizzle_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_rain_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_rain_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_rain_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_rain_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_rain_at_times_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_rain_at_times_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_rain_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_rain_night",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_rain_at_times_day",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_rain_at_times_night",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_rain_day",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_rain_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_freezing_rain_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_freezing_rain_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_freezing_rain_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_freezing_rain_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_sleet_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_sleet_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_sleet_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_sleet_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_moderate_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_moderate_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_heavy_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_heavy_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_snow_day",
+        "credit": ""
+    },
+    {
+        "weather": "heavy_snow_night",
+        "credit": ""
+    },
+    {
+        "weather": "ice_pellets_day",
+        "credit": ""
+    },
+    {
+        "weather": "ice_pellets_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_rain_shower_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_rain_shower_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_rain_shower_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_rain_shower_night",
+        "credit": ""
+    },
+    {
+        "weather": "torrential_rain_shower_day",
+        "credit": ""
+    },
+    {
+        "weather": "torrential_rain_shower_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_sleet_showers_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_sleet_showers_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_sleet_showers_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_sleet_showers_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_snow_showers_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_snow_showers_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_snow_showers_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_snow_showers_night",
+        "credit": ""
+    },
+    {
+        "weather": "light_showers_of_ice_pellets_day",
+        "credit": ""
+    },
+    {
+        "weather": "light_showers_of_ice_pellets_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_showers_of_ice_pellets_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_showers_of_ice_pellets_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_rain_with_thunder_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_rain_with_thunder_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_rain_with_thunder_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_rain_with_thunder_night",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_snow_with_thunder_day",
+        "credit": ""
+    },
+    {
+        "weather": "patchy_light_snow_with_thunder_night",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_snow_with_thunder_day",
+        "credit": ""
+    },
+    {
+        "weather": "moderate_or_heavy_snow_with_thunder_night",
+        "credit": ""
+    }
+]

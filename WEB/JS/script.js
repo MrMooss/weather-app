@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const apiKey = 'cfa2f6024166493185081638252502';
     const city = 'Budapest';
     const weatherContainer = document.querySelector('.weather-container');
+    const weatherBackground = document.querySelector('.weather-background');
     
     // Function to fetch weather data from the Weather API
     function getWeatherData() {
@@ -36,6 +37,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 const temperature = data.current.temp_c;
                 const weatherDescription = data.current.condition.text;
                 const cityName = data.location.name;
+
+                // Define the current weather condition
+                const currentWeather = `${weatherDescription.toLowerCase()}_day`;
+
+                // Fetch the JSON file
+                fetch('http://127.0.0.1:5500/WEB/Background_images/credits.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();  // Parse the JSON
+                    })
+                    .then(weatherCredits => {
+                        // Find the matching weather condition
+                        const weatherInfo = weatherCredits.find(item => item.weather === currentWeather);
+
+                        if (weatherInfo) {
+                            weatherBackground.style.backgroundImage = `url('http://127.0.0.1:5500/WEB/Background_images/Images/${weatherInfo.weather}.jpg')`;
+                            weatherBackground.style.backgroundSize = 'cover';
+                            weatherBackground.style.backgroundPosition = 'center';
+                            weatherBackground.style.backgroundAttachment = 'fixed'; 
+
+                            // // Set the credit text with HTML
+                            // creditContainer.innerHTML = weatherInfo.credit;
+                        } else {
+                            console.error('No matching weather found for', currentWeather);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching JSON data:', error);
+                    });
+
                 weatherContainer.innerHTML = `
                     <div class="weather-info div1">
                         <div class="city-name"><h2>${cityName}</h2></div>
@@ -67,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch data from OpenRouter API with the relevant weather info
     function getOpenRouterData(relevantWeatherInfo) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
+        const openRouterApiKey = "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";
 
         fetch(openRouterApiUrl, {
             method: "POST",
@@ -108,14 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             weatherContainer.insertAdjacentHTML('beforeend', openRouterHTML); // Append OpenRouter data at the end
         })
-        .catch(error => {
-            weatherContainer.insertAdjacentHTML('beforeend', `<p>Error fetching OpenRouter data: ${error.message}</p>`);
-        });
     }
 
     function getSearchPrompt(openRouterMessage) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
+        const openRouterApiKey = "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";
 
         fetch(openRouterApiUrl, {
             method: "POST",
@@ -131,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "content": [
                             {
                             "type": "text", 
-                            "text": `Generate me 4 search prompts that i can use in google to look up outfits for the following text: ${openRouterMessage}`
+                            "text": `Give me two search prompt that i can use on unsplash for this outfit: ${openRouterMessage}. One promt is for womans outfit, the other one is for mans. Give me with this schema: "Womans: [prompt], Mans: [prompt]" and say nothing else`
                             }
                         ]
                     }
@@ -148,10 +178,31 @@ document.addEventListener("DOMContentLoaded", () => {
             // Extract the response content
             const openRouterMessage = openRouterData.choices[0].message.content;
             console.log(openRouterMessage)
+            
+            const searchPrompt = (openRouterMessage.split('Womans: ')[1].split(', Mans: ')[0]).replace(/[\[\]]/g, '');
+            const searchPromptMan = (openRouterMessage.split('Mans: ')[1]).replace(/[\[\]]/g, '');
+            console.log(searchPrompt)
+            console.log(searchPromptMan)
+
+            getUnsplashImages("Woman on a rainy day").then(images => {
+                images.forEach(image => {
+                    console.log(image);
+                });
+            }).catch(err => {
+                console.error('Error fetching images:', err);
+            });
         })
-        .catch(error => {
-            weatherContainer.insertAdjacentHTML('beforeend', `<p>Error fetching OpenRouter data: ${error.message}</p>`);
+    }
+    const accessKey = 'fUBWm53jkeJdhvIKjbc55F-3JUDugNx_OLtbv9-kE1E';
+    async function getUnsplashImages(query) { 
+        const response = await fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=2`, {
+            headers: {
+                'Authorization': `Client-ID ${accessKey}`
+            }
         });
+        
+        const data = await response.json();
+        return data.results;
     }
 
     getWeatherData();
