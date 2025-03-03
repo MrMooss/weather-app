@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Display weather info on the page
                 const temperature = data.current.temp_c;
                 const weatherDescription = data.current.condition.text;
+                const weatherIcon = data.current.condition.icon;
                 const cityName = data.location.name;
 
                 // Define the current weather condition
@@ -51,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                     .then(weatherCredits => {
                         // Find the matching weather condition
-                        const weatherInfo = weatherCredits.find(item => item.weather === currentWeather);
+                        const weatherInfo = weatherCredits.find(item => item.weather === currentWeather.replace(/ /g, '_'));
 
                         if (weatherInfo) {
                             weatherBackground.style.backgroundImage = `url('http://127.0.0.1:5500/WEB/Background_images/Images/${weatherInfo.weather}.jpg')`;
@@ -71,9 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 weatherContainer.innerHTML = `
                     <div class="weather-info div1">
-                        <div class="city-name"><h2>${cityName}</h2></div>
-                        <p>Temperature: ${temperature}°C</p>
-                        <p>Condition: ${weatherDescription}</p>
+                        <canvas id="myCanvas" width="400" height="400"></canvas>
                     </div>
                     <div class="wind div2"><p>Wind: ${data.current.wind_kph} km/h</p></div>
                     <div class="humidity div3"><p>Humidity: ${data.current.humidity}%</p></div>
@@ -88,6 +87,76 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="feels-like div5"><p>Feels like: ${data.current.feelslike_c}°C</p></div>
                     <div class="air-quality AQI-${data.current.air_quality["us-epa-index"]} div6"><p>AQI: ${data.current.air_quality["us-epa-index"]}</p></div>
                 `;
+                const canvas = document.getElementById("myCanvas");
+                if (canvas) {
+                    const ctx = canvas.getContext("2d");
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const radius = 100;
+                    let angle = 0;
+                    
+                    const img = new Image();
+                    img.src = weatherIcon;
+                    img.onload = () => {
+                        draw();
+                    };
+
+                    function timeToAngle(hours, minutes) {
+                        const totalMinutesInDay = 24 * 60; // 1440 minutes in a day
+                        const minutesPassed = hours * 60 + minutes;
+                        
+                        // Calculate the angle within the range π to 2π
+                        let angle = (minutesPassed / totalMinutesInDay) * Math.PI + Math.PI;
+                        
+                        return angle;
+                    }
+                    
+
+                    function draw() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(0, 0, canvas.width, centerY); // Define a clipping rectangle for the upper half
+                        ctx.clip();
+
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI); // Draw the arc
+                        ctx.lineWidth = 8;
+                        ctx.strokeStyle = "rgba(187, 184, 184, 0.51)";
+                        ctx.stroke();
+
+                        // Calculate the icon's position on the 
+                        //0:00 = 3.14,  23:59 = 6.28
+                        const x = centerX + radius * Math.cos(angle);
+                        const y = centerY + radius * Math.sin(angle);
+
+                        // Draw the icon at the calculated position
+                        const imgWidth = 70; // Set the desired width
+                        const imgHeight = 70; // Set the desired height
+                        ctx.drawImage(img, x - imgWidth / 2, y - imgHeight / 2, imgWidth, imgHeight);
+
+                        ctx.restore(); // Restore the context to remove the clipping
+                        
+                        // Draw sun-up and sun-down times
+                        ctx.font = "16px Arial";
+                        ctx.fillStyle = "rgba(83, 82, 82, 0.68)";;
+                        ctx.fillText("0:00", centerX - radius - 11, centerY + 15); // Sun-up at the beginning of the arc
+                        ctx.fillText("23:59", centerX + radius-20, centerY + 15); // Sun-down at the end of the arc
+                        ctx.font = "20px Arial";
+                        ctx.fillStyle = "rgba(83, 82, 82, 0.68)";;
+                        ctx.fillText(cityName, centerX-38, centerY-30)
+
+                        const hour = new Date().getHours();
+                        const minute = new Date().getMinutes();
+                        const currAngle = timeToAngle(hour, minute);
+
+                        angle = currAngle;
+                        requestAnimationFrame(draw);
+                    }
+                } else {
+                    console.error('Canvas element not found');
+                }
                 console.log(relevantWeatherInfo)
                 // Call the OpenRouter API after getting relevant weather info
                 getOpenRouterData(relevantWeatherInfo);
@@ -132,7 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(openRouterData => {
             // Extract the response content
             const openRouterMessage = openRouterData.choices[0].message.content;
-            getSearchPrompt(openRouterMessage);
             // Append the OpenRouter data to the existing weatherContainer
             const openRouterHTML = `
                 <div class="openrouter-info div7">
@@ -143,68 +211,5 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
 
-    function getSearchPrompt(openRouterMessage) {
-        const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "";
-
-        fetch(openRouterApiUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${openRouterApiKey}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "model": "google/gemini-2.0-pro-exp-02-05:free",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                            "type": "text", 
-                            "text": `Give me two search prompt that i can use on unsplash for this outfit: ${openRouterMessage}. One promt is for womans outfit, the other one is for mans. Give me with this schema: "Womans: [prompt], Mans: [prompt]" and say nothing else`
-                            }
-                        ]
-                    }
-                ]
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch OpenRouter data");
-            }
-            return response.json();
-        })
-        .then(openRouterData => {
-            // Extract the response content
-            const openRouterMessage = openRouterData.choices[0].message.content;
-            console.log(openRouterMessage)
-            
-            const searchPrompt = (openRouterMessage.split('Womans: ')[1].split(', Mans: ')[0]).replace(/[\[\]]/g, '');
-            const searchPromptMan = (openRouterMessage.split('Mans: ')[1]).replace(/[\[\]]/g, '');
-            console.log(searchPrompt)
-            console.log(searchPromptMan)
-
-            getUnsplashImages("Woman on a rainy day").then(images => {
-                images.forEach(image => {
-                    console.log(image);
-                });
-            }).catch(err => {
-                console.error('Error fetching images:', err);
-            });
-        })
-    }
-    const accessKey = '';
-    async function getUnsplashImages(query) { 
-        const response = await fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=2`, {
-            headers: {
-                'Authorization': `Client-ID ${accessKey}`
-            }
-        });
-        
-        const data = await response.json();
-        return data.results;
-    }
-
     getWeatherData();
-
 });
