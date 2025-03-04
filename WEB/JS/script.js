@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const apiKey = '';
+    const apiKey = 'cfa2f6024166493185081638252502';
     const city = 'Budapest';
     const weatherContainer = document.querySelector('.weather-container');
     const weatherBackground = document.querySelector('.weather-background');
@@ -111,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         return angle;
                     }
                     
-
                     function draw() {
                         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
@@ -131,33 +130,47 @@ document.addEventListener("DOMContentLoaded", () => {
                         const x = centerX + radius * Math.cos(angle);
                         const y = centerY + radius * Math.sin(angle);
 
+                        const hour = new Date().getHours();
+                        const minute = new Date().getMinutes();
                         // Draw the icon at the calculated position
                         const imgWidth = 70; // Set the desired width
                         const imgHeight = 70; // Set the desired height
                         ctx.drawImage(img, x - imgWidth / 2, y - imgHeight / 2, imgWidth, imgHeight);
+                        ctx.font = "11px Arial";
+                        ctx.fillStyle = "rgba(32, 32, 32, 0.68)";
+                        ctx.fillText(`${hour}:${minute.toString().padStart(2, '0')}`, x + 15, y - 15);
 
                         ctx.restore(); // Restore the context to remove the clipping
                         
                         // Draw sun-up and sun-down times
                         ctx.font = "16px Arial";
-                        ctx.fillStyle = "rgba(83, 82, 82, 0.68)";;
+                        ctx.fillStyle = "rgba(83, 82, 82, 0.68)";
                         ctx.fillText("0:00", centerX - radius - 11, centerY + 15); // Sun-up at the beginning of the arc
                         ctx.fillText("23:59", centerX + radius-20, centerY + 15); // Sun-down at the end of the arc
+                        
                         ctx.font = "20px Arial";
-                        ctx.fillStyle = "rgba(83, 82, 82, 0.68)";;
-                        ctx.fillText(cityName, centerX-38, centerY-30)
+                        ctx.fillStyle = "rgba(83, 82, 82, 0.68)";
+                        const textWidth = ctx.measureText(cityName).width;
+                        ctx.fillText(cityName, centerX - textWidth / 2, centerY - 30);
+                        
+                        ctx.fillStyle = "rgba(0, 0, 0, 0.68)";
+                        const celsiuswidth = ctx.measureText(`${temperature}°C`).width;
+                        ctx.fillText(`${temperature}°C`, centerX - celsiuswidth / 2, centerY+10)
 
-                        const hour = new Date().getHours();
-                        const minute = new Date().getMinutes();
+                        ctx.font = "14px Arial";
+                        ctx.fillStyle = "rgba(0, 0, 0, 0.68)";
+                        ctx.fillText(`Moon phase: ${data.forecast.forecastday[0].astro.moon_phase}`, centerX - 175, centerY + 100);
+                        
                         const currAngle = timeToAngle(hour, minute);
 
                         angle = currAngle;
-                        requestAnimationFrame(draw);
+                        setTimeout(draw, 60000); // Schedule the next draw in 1 minute
                     }
+
+                    draw(); // Initial call to start the drawing loop
                 } else {
                     console.error('Canvas element not found');
                 }
-                console.log(relevantWeatherInfo)
                 // Call the OpenRouter API after getting relevant weather info
                 getOpenRouterData(relevantWeatherInfo);
             })
@@ -169,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to fetch data from OpenRouter API with the relevant weather info
     function getOpenRouterData(relevantWeatherInfo) {
         const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "";
+        const openRouterApiKey = "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";
 
         fetch(openRouterApiUrl, {
             method: "POST",
@@ -185,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "content": [
                             {
                             "type": "text", 
-                            "text": `Here is the weather forecast for Budapest from the current time onward:\n${relevantWeatherInfo}\n\nCan you tell me, in 3 or 4 sentences, what should i wear for going outside?`
+                            "text": `Here is the weather forecast for Budapest from the current time onward:\n${relevantWeatherInfo}\n\nCan you tell me, in 3 or 4 sentences, what should i wear for going outside? I get cold very easily.`
                             }
                         ]
                     }

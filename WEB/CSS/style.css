@@ -29,8 +29,8 @@ html, body{
     padding: 10px;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(8, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-column-gap: 12px;
+    grid-row-gap: 12px;
     }
     
     .div1 { grid-area: 1 / 1 / 5 / 4; }
@@ -56,6 +56,16 @@ html, body{
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: "Lexend Deca", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 50;
+    font-style: normal;
+    color: rgba(31, 30, 30, 0.719);
+}
+
+.div7 {
+    text-align: center;
+    padding: 25px;
 }
 
 .div4 {
@@ -63,6 +73,10 @@ html, body{
     justify-content: space-between;
     gap: 20px;
     border-radius: 10px;
+}
+
+.div4 div{
+    text-align: center;
 }
 
 .tomorrow, .da-tomorrow {
