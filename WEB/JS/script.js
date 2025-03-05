@@ -1,21 +1,66 @@
 document.addEventListener("DOMContentLoaded", () => {
     const apiKey = 'cfa2f6024166493185081638252502';
-    const city = 'Budapest';
     const weatherContainer = document.querySelector('.weather-container');
     const weatherBackground = document.querySelector('.weather-background');
+
+    function convertTo24Hour(time) {
+        let [timePart, modifier] = time.split(' '); // Split time and AM/PM
+        let [hours, minutes] = timePart.split(':'); // Split hours and minutes
+
+        if (modifier === 'PM' && hours !== '12') {
+            hours = parseInt(hours, 10) + 12; // Convert PM hours, except 12 PM
+        } else if (modifier === 'AM' && hours === '12') {
+            hours = '00'; // Convert 12 AM to 00
+        }
+
+        return `${hours}:${minutes}`;
+    }
+
+    async function getIp() {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip; // Correctly return the IP address
+        } catch (error) {
+            console.error('Error fetching IP address:', error);
+        }
+    }
+    
+    // Function to fetch the city based on the IP address
+    async function getCity() {
+        try {
+            const ip = await getIp(); // Wait for getIp() to complete
+            if (!ip) {
+                throw new Error('Failed to get IP address');
+            }
+            const location = `https://api.weatherapi.com/v1/search.json?q=${ip}&key=${apiKey}`;
+    
+            const response = await fetch(location);
+            if (!response.ok) {
+                throw new Error("Failed to fetch location data");
+            }
+            const data = await response.json();
+            const city = data[0].name;
+            return city; // Correctly return the city
+        } catch (error) {
+            console.error('Error fetching location data:', error);
+        }
+    }
     
     // Function to fetch weather data from the Weather API
-    function getWeatherData() {
-        const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&aqi=yes&days=3`;
-
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch weather data");
-                }
-                return response.json();
-            })
-            .then(data => {
+    async function getWeatherData() {
+        try {
+            const city = await getCity(); // Wait for getCity() to complete
+            if (!city) {
+                throw new Error('Failed to get city');
+            }
+            const apiUrl = `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&aqi=yes&days=3`;
+    
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error("Failed to fetch weather data");
+            }
+            const data = await response.json();
                 const today = new Date().toISOString().split('T')[0];  // Get today's date in YYYY-MM-DD format
                 const currentHour = new Date().getHours(); // Get current hour
                 
@@ -38,9 +83,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const weatherDescription = data.current.condition.text;
                 const weatherIcon = data.current.condition.icon;
                 const cityName = data.location.name;
-
+                const moon_phase = data.forecast.forecastday[0].astro.moon_phase;
+                const sunset = data.forecast.forecastday[0].astro.sunset;
+                let dayPhase = "day";
                 // Define the current weather condition
-                const currentWeather = `${weatherDescription.toLowerCase()}_day`;
+                if (currentHour >= convertTo24Hour(sunset).split(':')[0]) {
+                    dayPhase = "night";
+                }
+                const currentWeather = `${weatherDescription.toLowerCase()}_${dayPhase}`;
 
                 // Fetch the JSON file
                 fetch('http://127.0.0.1:5500/WEB/Background_images/credits.json')
@@ -159,12 +209,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         ctx.font = "14px Arial";
                         ctx.fillStyle = "rgba(0, 0, 0, 0.68)";
-                        ctx.fillText(`Moon phase: ${data.forecast.forecastday[0].astro.moon_phase}`, centerX - 175, centerY + 100);
+                        ctx.fillText(`Moon phase: ${moon_phase}`, centerX - 175, centerY + 100);
                         
                         const currAngle = timeToAngle(hour, minute);
 
                         angle = currAngle;
-                        setTimeout(draw, 60000); // Schedule the next draw in 1 minute
+                        const now = new Date();
+                        const seconds = now.getSeconds();
+                        const milliseconds = now.getMilliseconds();
+                        const timeUntilNextMinute = (60 - seconds) * 1000 - milliseconds
+                        setTimeout(draw, timeUntilNextMinute);
                     }
 
                     draw(); // Initial call to start the drawing loop
@@ -172,57 +226,56 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error('Canvas element not found');
                 }
                 // Call the OpenRouter API after getting relevant weather info
-                getOpenRouterData(relevantWeatherInfo);
-            })
-            .catch(error => {
+                getOpenRouterData(relevantWeatherInfo, weatherContainer);
+        } catch (error) {
                 weatherContainer.innerHTML = `<p>Error fetching weather data: ${error.message}</p>`;
-            });
-    }
-
-    // Function to fetch data from OpenRouter API with the relevant weather info
-    function getOpenRouterData(relevantWeatherInfo) {
-        const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-        const openRouterApiKey = "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";
-
-        fetch(openRouterApiUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${openRouterApiKey}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "model": "google/gemini-2.0-pro-exp-02-05:free",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                            "type": "text", 
-                            "text": `Here is the weather forecast for Budapest from the current time onward:\n${relevantWeatherInfo}\n\nCan you tell me, in 3 or 4 sentences, what should i wear for going outside? I get cold very easily.`
-                            }
-                        ]
-                    }
-                ]
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch OpenRouter data");
-            }
-            return response.json();
-        })
-        .then(openRouterData => {
-            // Extract the response content
-            const openRouterMessage = openRouterData.choices[0].message.content;
-            // Append the OpenRouter data to the existing weatherContainer
-            const openRouterHTML = `
-                <div class="openrouter-info div7">
-                    <p>${openRouterMessage}</p>
-                </div>
-            `;
-            weatherContainer.insertAdjacentHTML('beforeend', openRouterHTML); // Append OpenRouter data at the end
-        })
-    }
+        }
+    }   
 
     getWeatherData();
+    
 });
+
+function getOpenRouterData(relevantWeatherInfo, weatherContainer) {
+    const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
+    const openRouterApiKey = "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";
+
+    fetch(openRouterApiUrl, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${openRouterApiKey}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "model": "google/gemini-2.0-pro-exp-02-05:free",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                        "type": "text", 
+                        "text": `Here is the weather forecast for Budapest from the current time onward:\n${relevantWeatherInfo}\n\nCan you tell me, in 3 or 4 sentences, what should i wear for going outside? I get cold very easily.`
+                        }
+                    ]
+                }
+            ]
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch OpenRouter data");
+        }
+        return response.json();
+    })
+    .then(openRouterData => {
+        // Extract the response content
+        const openRouterMessage = openRouterData.choices[0].message.content;
+        // Append the OpenRouter data to the existing weatherContainer
+        const openRouterHTML = `
+            <div class="openrouter-info div7">
+                <p>${openRouterMessage}</p>
+            </div>
+        `;
+        weatherContainer.insertAdjacentHTML('beforeend', openRouterHTML); // Append OpenRouter data at the end
+    })
+}
