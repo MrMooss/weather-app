@@ -135,14 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
                                                 <p>Condition: ${forecastDATomorrow.day.condition.text}</p></div>
                     </div>
                     <div class="feels-like div5"><p>Feels like: ${data.current.feelslike_c}°C</p></div>
-                    <div class="air-quality AQI-${data.current.air_quality["us-epa-index"]} div6"><p>AQI: ${data.current.air_quality["us-epa-index"]}</p></div>
+                    <div class="air-quality AQI-${data.current.air_quality["us-epa-index"]} div6"><p>AQI: ${data.current.air_quality["pm2_5"]}</p></div>
                 `;
                 const canvas = document.getElementById("myCanvas");
                 if (canvas) {
                     const ctx = canvas.getContext("2d");
-                    const centerX = canvas.width / 2;
-                    const centerY = canvas.height / 2;
-                    const radius = 100;
                     let angle = 0;
                     
                     const img = new Image();
@@ -162,6 +159,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     
                     function draw() {
+                        const isMobile = window.innerWidth <= 768;
+
+                        // Adjust canvas size for mobile or desktop
+                        if (isMobile) {
+                            canvas.width = 300;  // Set smaller width for mobile
+                            canvas.height = 300; // Set smaller height for mobile
+                        } else {
+                            canvas.width = 500;  // Larger width for desktop
+                            canvas.height = 300; // Larger height for desktop
+    }
+
+                        const centerX = canvas.width / 2;
+                        const centerY = canvas.height / 2;
+                        const radius = isMobile ? 60 : 100;
                         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
                         ctx.save();
@@ -171,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         ctx.beginPath();
                         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI); // Draw the arc
-                        ctx.lineWidth = 8;
+                        ctx.lineWidth = isMobile ? 5 : 8;
                         ctx.strokeStyle = "rgba(187, 184, 184, 0.51)";
                         ctx.stroke();
 
@@ -186,30 +197,46 @@ document.addEventListener("DOMContentLoaded", () => {
                         const imgWidth = 70; // Set the desired width
                         const imgHeight = 70; // Set the desired height
                         ctx.drawImage(img, x - imgWidth / 2, y - imgHeight / 2, imgWidth, imgHeight);
-                        ctx.font = "11px Arial";
+                        ctx.font = isMobile ? "8px Arial" : "11px Arial";
                         ctx.fillStyle = "rgba(32, 32, 32, 0.68)";
                         ctx.fillText(`${hour}:${minute.toString().padStart(2, '0')}`, x + 15, y - 15);
 
                         ctx.restore(); // Restore the context to remove the clipping
                         
                         // Draw sun-up and sun-down times
-                        ctx.font = "16px Arial";
+                        ctx.font = isMobile ? "10px Arial" : "16px Arial";
                         ctx.fillStyle = "rgba(83, 82, 82, 0.68)";
                         ctx.fillText("0:00", centerX - radius - 11, centerY + 15); // Sun-up at the beginning of the arc
                         ctx.fillText("23:59", centerX + radius-20, centerY + 15); // Sun-down at the end of the arc
                         
-                        ctx.font = "20px Arial";
+                        ctx.font = isMobile ? "12px Arial" : "20px Arial";
                         ctx.fillStyle = "rgba(83, 82, 82, 0.68)";
                         const textWidth = ctx.measureText(cityName).width;
-                        ctx.fillText(cityName, centerX - textWidth / 2, centerY - 30);
-                        
+                        if (isMobile) {
+                            ctx.fillText(cityName, centerX - textWidth / 2, centerY - 20);
+                        }
+                        else {
+                            ctx.fillText(cityName, centerX - textWidth / 2, centerY - 30);
+                        }
                         ctx.fillStyle = "rgba(0, 0, 0, 0.68)";
                         const celsiuswidth = ctx.measureText(`${temperature}°C`).width;
-                        ctx.fillText(`${temperature}°C`, centerX - celsiuswidth / 2, centerY+10)
+                        if (isMobile) {
+                            ctx.fillText(`${temperature}°C`, centerX - celsiuswidth / 2, centerY+10)
+                        }
+                        else {
+                            ctx.fillText(`${temperature}°C`, centerX - celsiuswidth / 2, centerY+10)
+                        }
+                       
 
-                        ctx.font = "14px Arial";
+                        ctx.font = isMobile ? "10px Arial" : "14px Arial";
                         ctx.fillStyle = "rgba(0, 0, 0, 0.68)";
-                        ctx.fillText(`Moon phase: ${moon_phase}`, centerX - 175, centerY + 100);
+                        if (isMobile) {
+                            ctx.fillText(`Moon phase: ${moon_phase}`, centerX - 130, centerY + 50);
+                        }
+                        else {
+                            ctx.fillText(`Moon phase: ${moon_phase}`, centerX - 175, centerY + 100);
+                        }
+                        
                         
                         const currAngle = timeToAngle(hour, minute);
 
@@ -226,19 +253,58 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error('Canvas element not found');
                 }
                 // Call the OpenRouter API after getting relevant weather info
-                getOpenRouterData(relevantWeatherInfo, weatherContainer);
+                getOpenRouterData(relevantWeatherInfo, cityName, weatherContainer);
         } catch (error) {
                 weatherContainer.innerHTML = `<p>Error fetching weather data: ${error.message}</p>`;
         }
-    }   
+    }
 
+    function translate() {
+        const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
+        const openRouterApiKey = "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";
+        const text = "Strukturen Grundgestell auswählen und SerNr. in SAP erfassen";
+        fetch(openRouterApiUrl, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${openRouterApiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "model": "google/gemini-2.0-pro-exp-02-05:free",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                            "type": "text", 
+                            "text": `Fordítsd le magyarra és add vissza csak a fordítást: ${text}`
+                            }
+                        ]
+                    }
+                ]
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch OpenRouter data");
+            }
+            return response.json();
+        })
+        .then(openRouterData => {
+            // Extract the response content
+            const openRouterMessage = openRouterData.choices[0].message.content;
+            console.log(openRouterMessage);
+        })
+
+    }
     getWeatherData();
-    
+    translate();
 });
 
-function getOpenRouterData(relevantWeatherInfo, weatherContainer) {
+function getOpenRouterData(relevantWeatherInfo, cityName, weatherContainer) {
     const openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
     const openRouterApiKey = "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";
+    let lang = "HU"
 
     fetch(openRouterApiUrl, {
         method: "POST",
@@ -254,7 +320,7 @@ function getOpenRouterData(relevantWeatherInfo, weatherContainer) {
                     "content": [
                         {
                         "type": "text", 
-                        "text": `Here is the weather forecast for Budapest from the current time onward:\n${relevantWeatherInfo}\n\nCan you tell me, in 3 or 4 sentences, what should i wear for going outside? I get cold very easily.`
+                        "text": `Itt van a ${cityName}-i elrejelzés a következ órákra:\n${relevantWeatherInfo}\n\nMond el nekem 4-5 mondatban hogy mit kénefelvegyek ha kimegyek. Nagyon fázós vagyok. TÉrj ki arra is hogy ha egéz napra vagy csak pár órára. Válaszolj a következő nyelven: ${lang}`
                         }
                     ]
                 }
@@ -278,4 +344,5 @@ function getOpenRouterData(relevantWeatherInfo, weatherContainer) {
         `;
         weatherContainer.insertAdjacentHTML('beforeend', openRouterHTML); // Append OpenRouter data at the end
     })
+
 }

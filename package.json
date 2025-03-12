@@ -1,0 +1,24 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "A weather application that provides current weather data and forecasts.",
+  "main": "WEB/JS/script.js",
+  "scripts": {
+    "start": "live-server WEB",
+    "build": "tsc"
+  },
+  "keywords": [
+    "weather",
+    "forecast",
+    "API"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2",
+    "live-server": "^1.2.1"
+  }
+}
