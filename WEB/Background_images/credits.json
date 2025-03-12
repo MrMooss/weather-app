@@ -49,11 +49,11 @@
     },
     {
         "weather": "patchy_snow_day",
-        "credit": ""
+        "credit": "Photo by <a href='https://unsplash.com/@nate_marko?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Nate Markarian</a> on <a href='https://unsplash.com/photos/a-street-with-snow-on-the-ground-and-buildings-in-the-background-VhTjg8C_4VU?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
     },
     {
         "weather": "patchy_snow_night",
-        "credit": ""
+        "credit": "Photo by <a href='https://unsplash.com/@mavredium?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Maksim ŠiŠlo</a> on <a href='https://unsplash.com/photos/grayscale-photo-of-street-lights-turned-on-during-nighttime-Srtaph0yDBY?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
     },
     {
         "weather": "patchy_sleet_day",
@@ -97,11 +97,11 @@
     },
     {
         "weather": "fog_day",
-        "credit": ""
+        "credit": "Photo by <a href='https://unsplash.com/@monikamanenti?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Monika Manenti</a> on <a href='https://unsplash.com/photos/a-foggy-forest-with-trees-in-the-foreground--T-PI9bnDsM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
     },
     {
         "weather": "fog_night",
-        "credit": ""
+        "credit": "Photo by <a href='https://unsplash.com/@flyvk?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Daniil Onischenko</a> on <a href='https://unsplash.com/photos/a-foggy-street-at-night-with-street-lights-3C6DIGvZfEw?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>"
     },
     {
         "weather": "freezing_fog_day",

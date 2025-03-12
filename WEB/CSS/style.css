@@ -22,15 +22,14 @@ html, body{
 .weather-container {
     display: grid;
     width: 44vw;
-    height: 66vh;
+    height: auto;
     background-color: none;
     border-radius: 10px;
-    
     padding: 10px;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-template-rows: repeat(6, minmax(20px, 1fr)) auto;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
     }
     
     .div1 { grid-area: 1 / 1 / 5 / 4; }
@@ -39,35 +38,50 @@ html, body{
     .div4 { grid-area: 5 / 1 / 7 / 4; }
     .div5 { grid-area: 5 / 4 / 7 / 5; }
     .div6 { grid-area: 5 / 5 / 7 / 6; }
-    .div7 { grid-area: 7 / 1 / 9 / 6; }
+    .div7 { grid-area: 7 / 1 / 10 / 6; min-height: 100px;}
 
 .weather-info{
     align-items: center;
     align-content: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.486);
+    background-color: rgba(255, 255, 255, 0.450);
     border-radius: 10px;
 }
 
 .div1, .div2, .div3,.div4, .div5, .div6, .div7{
-    background-color: rgba(255, 255, 255, 0.486);
+    background-color: rgba(255, 255, 255, 0.450);
     border-radius: 10px;
     font-size: 1.1em;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: "Lexend Deca", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 50;
+    font-style: normal;
+    color: rgba(31, 30, 30, 0.836);
+}
+
+.div7 {
+    text-align: center;
+    padding: 5px 10px;
+    height: auto;
 }
 
 .div4 {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
     border-radius: 10px;
+}
+
+.div4 div{
+    text-align: center;
 }
 
 .tomorrow, .da-tomorrow {
     flex: 1;
-    padding: 10px;
+    padding: 3px;
     border-radius: 8px;
 }
 
