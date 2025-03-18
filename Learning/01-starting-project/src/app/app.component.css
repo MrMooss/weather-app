@@ -23,6 +23,11 @@ main {
   text-align: center;
 }
 
+p {
+  margin: 0;
+  font-size: x-large;
+}
+
 @media (min-width: 768px) {
   main {
     margin: 4rem auto;
